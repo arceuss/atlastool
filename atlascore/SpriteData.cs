@@ -39,8 +39,10 @@ public class SpriteData
     public RectData Rect { get; set; }
     public int SourceTexturePathID { get; set; }
     public string? InitialFileHash { get; set; }
-
+
+    [JsonIgnore]
     public Image<Bgra32>? Texture;
+    [JsonIgnore]
     public bool isChanged;
 
     public SpriteData(int pathID, string name, Orientation orientation, RectData rect, int sourceTexturePathID)

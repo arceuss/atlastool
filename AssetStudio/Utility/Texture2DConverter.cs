@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using AssetRipper.TextureDecoder.Bc;
+using AssetRipper.TextureDecoder.Rgb.Formats;
 using Texture2DDecoder;
 
 namespace AssetStudio
@@ -503,7 +505,9 @@ namespace AssetStudio
 
         private bool DecodeBC7(byte[] image_data, byte[] buff)
         {
-            return TextureDecoder.DecodeBC7(image_data, m_Width, m_Height, buff);
+            Bc7.Decompress<ColorBGRA<byte>, byte>(image_data.AsSpan(0, reader.Size), m_Width, m_Height, out var decodedData);
+            decodedData.CopyTo(buff, 0);
+            return true;
         }
 
         private bool DecodeDXT1Crunched(byte[] image_data, byte[] buff)

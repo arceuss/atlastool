@@ -15,7 +15,9 @@ public class TextureData
     public string Name { get; set; }
     public int FileID { get; set; }
     public int PathID { get; set; }
+    [JsonIgnore]
     public Image<Bgra32>? Texture;
+    [JsonIgnore]
     public bool isChanged;
 
     [JsonConstructor]
@@ -68,11 +70,25 @@ public class AtlasData
 
     public static void SerializeToFile(AtlasData atlasData, string fileName)
     {
-        File.WriteAllBytes(fileName, JsonSerializer.SerializeToUtf8Bytes(atlasData, new JsonSerializerOptions { WriteIndented = true }));
+        File.WriteAllBytes(fileName, JsonSerializer.SerializeToUtf8Bytes(atlasData, AtlasDataJsonContext.Default.AtlasData));
+
     }
+
 
     public static AtlasData? DeserializeFromFile(string fileName)
     {
-        return JsonSerializer.Deserialize<AtlasData>(File.ReadAllBytes(fileName));
+        return JsonSerializer.Deserialize(File.ReadAllBytes(fileName), AtlasDataJsonContext.Default.AtlasData);
+
     }
+}
+
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+
+[JsonSerializable(typeof(AtlasData))]
+
+internal partial class AtlasDataJsonContext : JsonSerializerContext
+
+{
+
 }
